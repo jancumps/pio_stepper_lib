@@ -14,6 +14,7 @@ C++ library to run stepper motors in PIO state machines
 #include "hardware/pio.h"
 import stepper; // PIO stepper lib
 
+// pins
 const uint dir = 4U; // implies that step is gpio 5
 // config what PIO, SM and IRQ channel to use
 const auto piostep = pio1;
