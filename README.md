@@ -3,7 +3,7 @@ Raspberry PIO autonomous stepper motor driver
 C++ library to run stepper motors in PIO state machines
 
 - 4 motors can be controlled per PIO
-- can be used with any stepper motor driver that supports PIN and DIR operation
+- can be used with any stepper motor driver that supports STEP and DIR operation
 - can handle as many commands as PIO FIFO accepts without waiting (default 8).
 - each command can autonomously handle 2147483647 steps, and the spin direction
 - can notify the calling program when a command has finished
