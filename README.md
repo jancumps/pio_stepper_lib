@@ -46,13 +46,13 @@ int main() {
     init_pio();
 
     std::array<stepper::command, 7> cmd{{
-        {20 * microstep_x, true}, 
-        {20 * microstep_x, false},
-        {20 * microstep_x, false},
-        {40 * microstep_x, false},
-        {25 * microstep_x, true},
-        {35 * microstep_x, true},
-        {200 * microstep_x, true}}
+        {20, true}, 
+        {20, false},
+        {20, false},
+        {40, false},
+        {25, true},
+        {35, true},
+        {200, true}}
     };
 
     motor1.on_complete_callback(on_complete); 
