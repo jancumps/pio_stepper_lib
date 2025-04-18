@@ -6,7 +6,7 @@ C++ library to run stepper motors in PIO state machines
 - can be used with any stepper motor driver that supports PIN and DIR operation
 - can handle as many commands as PIO FIFO accepts without waiting (default 8).
 - each command can autonomously handle 2147483647 steps, and the spin direction
-- can notify the calling program when an instruction is finished
+- can notify the calling program when a command has finished
 - can report how many commands it processed
 
 Example motor commands batch of 7 instructions:  
