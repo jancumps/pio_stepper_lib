@@ -1,0 +1,49 @@
+; Side-set pin 0 is used for stepper output (this is pin+1)
+; pin is used for dir output
+.pio_version 0 // only requires PIO version 0
+
+.program stepper
+.side_set 1
+.define public DELAY 0
+.define public PIO_IRQ_DONE 0
+.wrap_target
+start:
+    pull block                  side 0 ; Pull from FIFO to OSR
+    out pins, 1                 side 0 ; shift direction out of OSR and output to dir
+    mov x, osr                  side 0 ; Copy rest of OSR to scratch X
+    jmp !x start                side 0
+    jmp x-- tocks_h             side 0
+tocks_h:
+    mov y, isr                  side 1 ; ISR contains number of tocks to hold level
+count_high:
+    jmp y-- count_high          side 1 [DELAY] ; keep high for tocks
+    nop                         side 1 ; same size as low
+tocks_l:
+    mov y, isr                  side 0 ; ISR contains number of tocks to hold level
+count_low:
+    jmp y-- count_low           side 0 [DELAY] ; keep high for tocks
+    jmp x-- tocks_h             side 0 ; not done, keep loopins
+    irq PIO_IRQ_DONE rel        side 0 ; flag that the job's done
+.wrap
+
+% c-sdk {
+#include "hardware/clocks.h"
+
+const uint clock_factor = 6U;
+
+static inline void stepper_program_init(PIO pio, uint sm, uint offset, uint pin, float clock_divider) {
+   pio_gpio_init(pio, pin);
+   pio_gpio_init(pio, pin+1);
+   
+   pio_sm_config c = stepper_program_get_default_config(offset);
+   sm_config_set_out_pins(&c, pin, 2);
+   pio_sm_set_consecutive_pindirs(pio, sm, pin, 2, true);
+   sm_config_set_sideset_pins(&c, pin+1);
+
+//   float div = clock_get_hz(clk_sys) / (clock_factor * freq);
+   float div = clock_divider;
+   sm_config_set_clkdiv(&c, div);
+
+   pio_sm_init(pio, sm, offset, &c);
+}
+%}
