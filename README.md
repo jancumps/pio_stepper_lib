@@ -9,6 +9,10 @@ C++ library to run stepper motors in PIO state machines
 - can notify the calling program when a command has finished
 - can report how many commands it processed
 
+## documentation:
+[1: intro, set up project and simple example](https://community.element14.com/products/raspberry-pi/b/blog/posts/raspberry-pio-stepper-library-documentation---1-intro-set-up-project-and-simple-example)  
+
+
 ## Example: motor runs a batch of 7 commands:  
 ```
 #include "hardware/pio.h"
