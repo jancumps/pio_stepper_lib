@@ -5,7 +5,7 @@
 .program stepper
 .side_set 1
 .define public DELAY 0
-.define public DIR_DELAY 1
+.define public DIR_DELAY 2
 .define public PIO_IRQ_DONE 0
 .wrap_target
 start:
