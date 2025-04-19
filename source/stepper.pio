@@ -9,7 +9,7 @@
 .wrap_target
 start:
     pull block                  side 0 ; Pull from FIFO to OSR
-    out pins, 1                 side 0 ; shift direction out of OSR and output to dir
+    out pins, 1 side 0 wait 1          ; shift direction out of OSR and output to dir
     mov x, osr                  side 0 ; Copy rest of OSR to scratch X
     jmp !x start                side 0
     jmp x-- tocks_h             side 0
