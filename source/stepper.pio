@@ -18,9 +18,9 @@ tocks_h:
     mov y, isr                  side 1 ; ISR contains number of tocks to hold level
 count_high:
     jmp y-- count_high          side 1 [DELAY] ; keep high for tocks
-    nop                         side 1 ; same size as low
+    nop                         side 1 ; same size as low. // TODO Note: this is not needed
 tocks_l:
-    mov y, isr                  side 0 ; ISR contains number of tocks to hold level
+    mov y, isr                  side 0 ; ISR contains number of tocks to hold level // TODO Note: not needed for both edges ...
 count_low:
     jmp y-- count_low           side 0 [DELAY] ; keep high for tocks
     jmp x-- tocks_h             side 0 ; not done, keep loopins
