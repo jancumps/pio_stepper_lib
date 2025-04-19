@@ -67,7 +67,7 @@ protected:
     and / or it can report the number of commands executed
 */
 class stepper_callback_controller : public stepper_controller {
-using notifier_t = void (*)(stepper_callback_controller&); // callback definition
+using notifier_t = void (*)(const stepper_callback_controller&); // callback definition
 private:
     /*
     PIO interrupts can't call object members, 
