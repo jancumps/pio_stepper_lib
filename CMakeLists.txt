@@ -26,7 +26,7 @@ pico_generate_pio_header(stepper
 
 target_link_libraries( stepper
         pico_stdlib
-        hardware_pio
-        hardware_gpio
+        $<COMPILE_ONLY:hardware_pio>
+        $<COMPILE_ONLY:hardware_gpio>
 )
 
