@@ -6,7 +6,7 @@ module;
 
 // FIXME remove
 #include "pico/stdlib.h"  // for demo section (printf)
-
+#include <cstdio>
 
 import pio_irq_util;
 
