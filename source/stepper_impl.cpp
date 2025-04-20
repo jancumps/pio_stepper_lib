@@ -69,7 +69,7 @@ void stepper_callback_controller::register_pio_interrupt(uint irq_channel, bool 
 
 void stepper_callback_controller::handler() {
     uint ir = pio_irq_util::relative_interrupt(stepper_PIO_IRQ_DONE, sm_);
-    assert(pio_->irq && 1 << sm_); // develop check: interrupt is from the correct state machine
+    assert(pio_->irq & 1 << sm_); // develop check: interrupt is from the correct state machine
     commands_ = commands_ + 1;
     pio_interrupt_clear(pio_, ir);
     if (callback_ != nullptr) {
