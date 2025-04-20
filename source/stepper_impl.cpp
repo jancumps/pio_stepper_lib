@@ -26,12 +26,18 @@ bool stepper_callback_controller::interrupt_manager::register_stepper(stepper_ca
 }
 
 void stepper_callback_controller::interrupt_manager::interrupt_handler(PIO pio) {
+    if (pio->irq == 0U) {
+        return; // we can't handle IRQs that don't have sm info
+    }
+
+    assert (pio->irq); // there should always be a sm
     uint sm = pio_irq_util::sm_from_interrupt(pio->irq, stepper_PIO_IRQ_DONE);
     stepper_callback_controller *stepper =  steppers_[index_for(pio, sm)];
     if (stepper != nullptr) {
         stepper -> handler();
     }
 }
+
 
 void stepper_callback_controller::register_pio_interrupt(uint irq_channel, bool enable) {
     assert (irq_channel < 2); // develop check that we use 0 or 1 only
@@ -60,15 +66,16 @@ void stepper_callback_controller::register_pio_interrupt(uint irq_channel, bool 
 #endif            
     }
 
-    irq_set_exclusive_handler(irq_num, handler);  //Set the handler in the NVIC
+    irq_add_shared_handler(irq_num, handler, PICO_SHARED_IRQ_HANDLER_DEFAULT_ORDER_PRIORITY );  //Set the handler in the NVIC
     if (enable) {
         irq_set_enabled(irq_num, true);
     }
 }
 
 void stepper_callback_controller::handler() {
+    uint irq = pio_->irq;
     uint ir = pio_irq_util::relative_interrupt(stepper_PIO_IRQ_DONE, sm_);
-    assert(pio_->irq == 1 << ir); // develop check: interrupt is from the correct state machine
+    assert(irq & 1 << sm_); // develop check: interrupt is from the correct state machine
     commands_ = commands_ + 1;
     pio_interrupt_clear(pio_, ir); //FIXME I may have to clear the bit, instead of to the whole value
     if (callback_ != nullptr) {
