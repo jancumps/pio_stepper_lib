@@ -43,10 +43,10 @@ inline pio_interrupt_source interrupt_source(const pio_interrupt_source is, cons
 
 uint sm_from_interrupt(const uint32_t irq_val, const uint32_t ir) {
     // TODO validate for Pico 2 interrupts 4 .. 7
-    volatile uint32_t irq = irq_val;
+    uint32_t irq = irq_val;
     uint i;
     for (i = 0; i < 4; i++) { // should be sm 0 .. 3
-        // if (irq_val & 1 << relative_interrupt(ir, i)) { // is bit set?
+        // if (irq & 1 << relative_interrupt(ir, i)) { // is bit set?
         if (irq & 1 << i) { // is bit set?
                 break;
         }
