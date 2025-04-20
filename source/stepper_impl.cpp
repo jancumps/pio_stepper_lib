@@ -75,7 +75,7 @@ void stepper_callback_controller::register_pio_interrupt(uint irq_channel, bool 
 #endif            
     }
 
-    irq_set_exclusive_handler(irq_num, handler);  //Set the handler in the NVIC
+    irq_add_shared_handler(irq_num, handler, PICO_SHARED_IRQ_HANDLER_DEFAULT_ORDER_PRIORITY );  //Set the handler in the NVIC
     if (enable) {
         irq_set_enabled(irq_num, true);
     }
