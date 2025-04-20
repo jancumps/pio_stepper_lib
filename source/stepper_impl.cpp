@@ -70,7 +70,7 @@ void stepper_callback_controller::handler() {
     uint ir = pio_irq_util::relative_interrupt(stepper_PIO_IRQ_DONE, sm_);
     assert(pio_->irq == 1 << ir); // develop check: interrupt is from the correct state machine
     commands_ = commands_ + 1;
-    pio_interrupt_clear(pio_, ir);
+    pio_interrupt_clear(pio_, ir); //FIXME I may have to clear the bit, instead of to the whole value
     if (callback_ != nullptr) {
         (callback_)( *this);
     }
