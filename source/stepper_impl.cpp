@@ -26,7 +26,8 @@ bool stepper_callback_controller::interrupt_manager::register_stepper(stepper_ca
 }
 
 void stepper_callback_controller::interrupt_manager::interrupt_handler(PIO pio) {
-    uint sm = pio_irq_util::sm_from_interrupt(pio->irq, stepper_PIO_IRQ_DONE);
+    uint irq = pio->irq;
+    uint sm = pio_irq_util::sm_from_interrupt(irq, stepper_PIO_IRQ_DONE);
     stepper_callback_controller *stepper =  steppers_[index_for(pio, sm)];
     if (stepper != nullptr) {
         stepper -> handler();
@@ -68,8 +69,9 @@ void stepper_callback_controller::register_pio_interrupt(uint irq_channel, bool 
 }
 
 void stepper_callback_controller::handler() {
+    uint irq = pio_->irq;
     uint ir = pio_irq_util::relative_interrupt(stepper_PIO_IRQ_DONE, sm_);
-    assert(pio_->irq & 1 << sm_); // develop check: interrupt is from the correct state machine
+    assert(irq & 1 << sm_); // develop check: interrupt is from the correct state machine
     commands_ = commands_ + 1;
     pio_interrupt_clear(pio_, ir);
     if (callback_ != nullptr) {
