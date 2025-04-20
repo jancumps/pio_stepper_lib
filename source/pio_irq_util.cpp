@@ -50,6 +50,9 @@ uint sm_from_interrupt(const uint32_t irq_val, const uint32_t ir) {
                 break;
         }
     }
+    if (i == 4) {
+        while(true) { volatile int i = 0; } // FIXME this is a debug trap
+    }
     assert(i != 4); // develop check there has to be a bit
     return i;
 }
