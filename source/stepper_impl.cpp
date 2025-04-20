@@ -4,10 +4,6 @@ module;
 
 #include <array>
 
-// FIXME remove
-#include "pico/stdlib.h"  // for demo section (printf)
-#include <cstdio>
-
 import pio_irq_util;
 
 module stepper;
@@ -26,22 +22,13 @@ bool stepper_callback_controller::interrupt_manager::register_stepper(stepper_ca
     size_t idx = index_for(stepper->pio_, stepper->sm_);
     stepper_callback_controller *old = steppers_[idx];
     steppers_[idx] = set ? stepper : nullptr;
-    printf("stepper set: %d\n", stepper);
     return set ? old == nullptr : true;
 }
 
 void stepper_callback_controller::interrupt_manager::interrupt_handler(PIO pio) {
-    // printf("=======================\n");
-    // for(auto a: steppers_) {
-    //     printf("stepper registered: %d\n", a);
-    // }
-    // printf("-----------------------\n");
     uint sm = pio_irq_util::sm_from_interrupt(pio->irq, stepper_PIO_IRQ_DONE);
-    // printf("sm: %d\n", sm);
     size_t idx = index_for(pio, sm);
-    // printf("idx: %d\n", idx);
     stepper_callback_controller *stepper =  steppers_[idx];
-    // printf("stepper found: %d\n", stepper);
     if (stepper != nullptr) {
         stepper -> handler();
     }
