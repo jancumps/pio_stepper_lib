@@ -29,7 +29,6 @@ void stepper_callback_controller::interrupt_manager::interrupt_handler(PIO pio) 
     if (pio->irq == 0U) {
         return; // we can't handle IRQs that don't have sm info
     }
-
     assert (pio->irq); // there should always be a sm
     uint sm = pio_irq_util::sm_from_interrupt(pio->irq, stepper_PIO_IRQ_DONE);
     stepper_callback_controller *stepper =  steppers_[index_for(pio, sm)];
@@ -77,7 +76,7 @@ void stepper_callback_controller::handler() {
     uint ir = pio_irq_util::relative_interrupt(stepper_PIO_IRQ_DONE, sm_);
     assert(irq & 1 << sm_); // develop check: interrupt is from the correct state machine
     commands_ = commands_ + 1;
-    pio_interrupt_clear(pio_, ir); //FIXME I may have to clear the bit, instead of to the whole value
+    pio_interrupt_clear(pio_, ir);
     if (callback_ != nullptr) {
         (callback_)( *this);
     }
