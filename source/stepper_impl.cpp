@@ -31,16 +31,22 @@ bool stepper_callback_controller::interrupt_manager::register_stepper(stepper_ca
 }
 
 void stepper_callback_controller::interrupt_manager::interrupt_handler(PIO pio) {
-    uint sm = pio_irq_util::sm_from_interrupt(pio->irq, stepper_PIO_IRQ_DONE);
-    stepper_callback_controller *stepper =  steppers_[index_for(pio, sm)];
+    printf("=======================\n");
     for(auto a: steppers_) {
         printf("stepper registered: %d\n", a);
     }
+    printf("-----------------------\n");
+    uint sm = pio_irq_util::sm_from_interrupt(pio->irq, stepper_PIO_IRQ_DONE);
+    printf("sm: %d\n", sm);
+    size_t idx = index_for(pio, sm);
+    printf("idx: %d\n", idx);
+    stepper_callback_controller *stepper =  steppers_[idx];
     printf("stepper found: %d\n", stepper);
     if (stepper != nullptr) {
         stepper -> handler();
     }
 }
+
 
 void stepper_callback_controller::register_pio_interrupt(uint irq_channel, bool enable) {
     assert (irq_channel < 2); // develop check that we use 0 or 1 only
