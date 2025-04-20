@@ -45,7 +45,7 @@ uint sm_from_interrupt(const uint32_t irq_val, const uint32_t ir) {
     // TODO validate for Pico 2 interrupts 4 .. 7
     uint i;
     for (i = 0; i < 4; i++) { // should be sm 0 .. 3
-        if (irq_val == 1 << relative_interrupt(ir, i)) {
+        if (irq_val && 1 << relative_interrupt(ir, i)) { // is bit set?
             break;
         }
     }
