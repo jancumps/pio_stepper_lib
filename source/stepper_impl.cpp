@@ -26,7 +26,8 @@ bool stepper_callback_controller::interrupt_manager::register_stepper(stepper_ca
 }
 
 void stepper_callback_controller::interrupt_manager::interrupt_handler(PIO pio) {
-    uint irq = pio->irq;
+    volatile uint irq = pio->irq;
+    assert (irq); // there should always be a sm
     uint sm = pio_irq_util::sm_from_interrupt(irq, stepper_PIO_IRQ_DONE);
     stepper_callback_controller *stepper =  steppers_[index_for(pio, sm)];
     if (stepper != nullptr) {
