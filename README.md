@@ -109,5 +109,5 @@ That is all it takes to integrate this design in your project.
 ## toolchain requirements: 
 - CMake 3.28 or higher
 - GCC 14.2.1 or higher
-- tested with Pico C SDK 2.1.1
-- tested with Pico 1
+- Pico C SDK 2.1.1
+- tested with Pico 1 and Pico-W
