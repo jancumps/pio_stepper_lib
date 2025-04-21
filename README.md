@@ -12,7 +12,7 @@ C++ library to run stepper motors in PIO state machines
 ## documentation:
 [1: intro, set up project and simple example](https://community.element14.com/products/raspberry-pi/b/blog/posts/raspberry-pio-stepper-library-documentation---1-intro-set-up-project-and-simple-example)  
 [2: advanced example with notification](https://community.element14.com/products/raspberry-pi/b/blog/posts/raspberry-pio-stepper-library-documentation---2-advanced-example-with-notification)  
-
+[3: control multiple motors with 1 or more PIOs](https://community.element14.com/products/raspberry-pi/b/blog/posts/raspberry-pio-stepper-library-documentation---3-control-multiple-motors-with-1-or-more-pios)
 
 ## Example: motor runs a batch of 7 commands:  
 ```
