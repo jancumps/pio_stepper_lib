@@ -12,7 +12,7 @@ export namespace stepper {
 // implementations are in ./stepper_impl.cpp
 // max steps taken is 2147483647 (highest number that fits in 31 bits)
 
-/*  Stepper motor command wrapper
+/*  Stepper motor command wrapper: seteps to take, and direction
     lightweight 
 */
 class command {
@@ -34,17 +34,25 @@ class stepper_controller {
 public:
     stepper_controller(PIO pio, uint sm) : pio_(pio), sm_(sm) {}
     virtual ~stepper_controller() {}
-    // Write `steps` to TX FIFO. State machine will copy this into X
+
+    // API style methods, can be executed without creating an object
+    // API style: write steps to TX FIFO. State machine will copy this into X
     static inline void take_steps(PIO pio, uint sm, const command& cmd) {
         pio_sm_put_blocking(pio, sm, cmd);
     }
-    static inline void take_steps(PIO pio, uint sm, uint32_t steps, bool reverse) {
-        take_steps(pio, sm, command(steps, reverse));
-    }
+    // API style: slow down motor
+    // delay adds clock ticks to both halve periods of a pulse
     // call when the state machine is free. It interferes with activities
     static void set_delay(PIO pio, uint sm, uint32_t delay);
+    // end API style methods
+
+    // write steps to TX FIFO. State machine will copy this into X
     inline void take_steps(const command& cmd) { take_steps(pio_, sm_, cmd); }
+    // slow down motor
+    // delay adds clock ticks to both halve periods of a pulse
+    // call when the state machine is free. It interferes with activities
     inline void set_delay(uint32_t delay) { set_delay(pio_, sm_, delay); }
+
     // state machine config
     inline void pio_init(uint dir_pin, float clock_divider) {
         stepper_program_init(pio_, sm_, pio_offset_[PIO_NUM(pio_)], dir_pin, clock_divider);
@@ -69,45 +77,56 @@ protected:
 class stepper_callback_controller : public stepper_controller {
 using notifier_t = void (*)(const stepper_callback_controller&); // callback definition
 private:
+
     /*
-    PIO interrupts can't call object members, 
-    this embedded class helps translating interrupts to the relevant object
-    also enforces this restriction: one stepper_interrupt object per state machine
-    because this no longer a wrapper. We maintain state
+    PIO interrupts can only call functions without parameters. They can't call object members.
+    This static embedded utility class helps matching interrupts to the relevant object.
     */
     class interrupt_manager {
     private:
-        interrupt_manager() = delete;  // static classe. prevent instantiating.
+        interrupt_manager() = delete;  // static class. prevent instantiating.
     public:        
         // if an object is currently handling a pio + sm combination, it will 
         // be replaced and will no longer receive interrupts
-        // return false if an existing combination is replaced
+        // return false as warning if an existing combination is replaced
         static bool register_stepper(stepper_callback_controller * stepper, bool set);
 
         // PIO API doesn't accept a callback with parameters, so I can't pass the PIO instance
-        // this is a reasonable solution without overhead
+        // provide a parameter-less method for ezach PIO is a reasonable solution
+        // only task is to call interrupt_handler() and passing it the PIO indicated in the name.
+        // Without overhead: optimised out inrelease code
         static inline void interrupt_handler_PIO0() { interrupt_handler(pio0); }    
         static inline void interrupt_handler_PIO1() { interrupt_handler(pio1); }
 #if (NUM_PIOS > 2) // pico 2       
         static inline void interrupt_handler_PIO2() { interrupt_handler(pio2); }
 #endif        
     private:
+        // forwards the interrupt to the surrounding class
         static void interrupt_handler(PIO pio);
+        // utility calculates the index for the object staht serves a state machine in steppers_
         static inline size_t index_for(PIO pio, uint sm) { return PIO_NUM(pio) * 4 + sm; }
-        // keep pointer to all possible objects
+        // keep pointer of objects that serve the state machines
+        // 2-D array with slot for all possible state machines: PIO0[0..3], PIO1[0..3], ...
         static std::array<stepper_callback_controller *, NUM_PIOS * 4> steppers_;
     };   
 public:
     stepper_callback_controller(PIO pio, uint sm) : stepper_controller(pio,sm), commands_(0U),
         callback_(nullptr) { interrupt_manager::register_stepper(this, true); }
     virtual ~stepper_callback_controller() { interrupt_manager::register_stepper(this, false); }
+
+    // return commands completed
     inline uint commands() const { return commands_; }
+    // reset commands completed to 0
     inline void reset_commands() { commands_ = 0U; }
+
+    // register object as interrupt service for its state machine
     void register_pio_interrupt(uint irq_channel, bool enable);
+    // user code class to call when a command is finished.
+    // Pass immutable reference to object as user info
     inline void on_complete_callback(notifier_t callback) { callback_ = callback; }
 private:
     void handler();
-    volatile uint commands_; // updated by interrupt handler
+    volatile uint commands_; // volatile: updated by interrupt handler
     notifier_t callback_;
 };
 

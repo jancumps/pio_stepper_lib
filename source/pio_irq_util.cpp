@@ -6,7 +6,7 @@ module;
 export module pio_irq_util;
 export namespace pio_irq_util {
 
-    // sm   irq int MOD SFTL    sm      irq     int     MOD     SFTL
+    // sm   irq int MOD SFTL    sm      irq     int     MOD     SHFT LFT
     // 0    0   1   0   1       0000    0000    0001    0000    0001
     // 0    1   2   1   2       0000    0001    0010    0001    0010
     // 0    2   4   2   4       0000    0010    0100    0010    0100
@@ -24,6 +24,7 @@ export namespace pio_irq_util {
     // 3    2   2   1   2       0011    0010    0010    0001    0010
     // 3    3   4   2   4       0011    0011    0100    0010    0100
     
+// calculate relative IRQ flag for a state mchine
 // 10 (REL): the state machine ID (0…3) is added to the IRQ flag index, by way of
 // modulo-4 addition on the two LSBs
 inline uint relative_interrupt(const uint32_t ir, const uint sm) {
@@ -37,10 +38,12 @@ inline uint relative_interrupt(const uint32_t ir, const uint sm) {
     return retval;
 }
 
+// utility to do math on pio_interrupt_source enum
 inline pio_interrupt_source interrupt_source(const pio_interrupt_source is, const uint32_t ir) {
     return static_cast<pio_interrupt_source>(std::to_underlying(is) + ir);
 }
 
+// find for what state machine a relative interrupt was thrown
 uint sm_from_interrupt(const uint32_t irq_val, const uint32_t ir) {
     // TODO validate for Pico 2 interrupts 4 .. 7
     uint i;
