@@ -105,6 +105,7 @@ That is all it takes to integrate this design in your project.
 ## demo project that uses this lib: 
 [Stepper Motor Control with Raspberry Pico PI and DRV8711 driver](https://github.com/jancumps/pio_drv8711_stepper)  
 [2 Stepper Motors on the same or different PIOs (example source)](https://gist.github.com/jancumps/c66e8af42dc30ee6dfbdfc06aea496e1)  
+[Stepper Motor Control with Raspberry Pico PI and A4988 driver](https://github.com/jancumps/pio_a4988_stepper)  
 
 ## toolchain requirements: 
 - CMake 3.28 or higher
