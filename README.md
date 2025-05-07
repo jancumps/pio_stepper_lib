@@ -16,13 +16,7 @@ C++ library to run stepper motors in PIO state machines
 [4: understand the step frequency](https://community.element14.com/products/raspberry-pi/b/blog/posts/raspberry-pio-stepper-library-documentation---4-understand-the-step-frequency)  
 
 ## 4 motors running on 1 PIO. Consecutive and Concurrent
-<object width="425" height="350">
-  <param name="movie" value="https://youtu.be/Hhug2iatza0" />
-  <param name="wmode" value="transparent" />
-  <embed src="https://youtu.be/Hhug2iatza0"
-         type="application/x-shockwave-flash"
-         wmode="transparent" width="425" height="350" />
-</object>
+[![Watch the video](https://img.youtube.com/vi/Hhug2iatza0/0.jpg)](https://youtu.be/Hhug2iatza0)
 
 ## Example: motor runs a batch of 7 commands:  
 ```
