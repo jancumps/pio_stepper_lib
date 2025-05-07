@@ -17,7 +17,7 @@ C++ library to run stepper motors in PIO state machines
 
 ## video: 4 motors running on 1 PIO. Consecutive and Concurrent
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=Hhug2iatza0" target="_blank">
- <img src="http://img.youtube.com/vi/Hhug2iatza0/mqdefault.jpg" alt="Watch the video" width="240" height="180" border="10" />
+ <img src="http://img.youtube.com/vi/Hhug2iatza0/mqdefault.jpg" alt="Watch the video" width="480" height="360" border="10" />
 </a>
 
 ## Example: motor runs a batch of 7 commands:  
