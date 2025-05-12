@@ -22,7 +22,7 @@ tocks_l:
     mov y, isr                  side 0 ; ISR contains number of tocks to hold level // TODO Note: not needed for both edges ...
 count_low:
     jmp y-- count_low           side 0 [DELAY] ; keep high for tocks
-    jmp x-- tocks_h             side 0 ; not done, keep loopins
+    jmp x-- tocks_h             side 0 ; not done, keep looping
     irq PIO_IRQ_DONE rel        side 0 ; flag that the job's done
 .wrap
 
