@@ -21,11 +21,14 @@ public:
         assert(steps <= (UINT32_MAX >> 1)); 
     }
     inline operator uint32_t() const { return cmd_; }
-    inline uint32_t steps() { return cmd_ >> 1; }
-    inline bool reverse() { return cmd_ & 1; }
+    friend uint32_t steps(const command &cmd);
+    friend bool reverse(const command &cmd);
 private:
     uint32_t cmd_;
 };
+
+inline uint32_t steps(const command &cmd) { return cmd >> 1; }
+inline bool reverse(const command &cmd) { return cmd & 1; }
 
 /*  Stepper motor wrapper for PIO state machine
     this class can be used as object,
