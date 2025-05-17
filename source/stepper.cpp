@@ -21,6 +21,8 @@ public:
         assert(steps <= (UINT32_MAX >> 1)); 
     }
     inline operator uint32_t() const { return cmd_; }
+    inline uint32_t steps() { return cmd_ >> 1; }
+    inline bool reverse() { return cmd_ & 1; }
 private:
     uint32_t cmd_;
 };
