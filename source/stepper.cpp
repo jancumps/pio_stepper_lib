@@ -28,7 +28,7 @@ private:
 };
 
 inline uint32_t steps(const command &cmd) { return cmd >> 1; }
-inline bool reverse(const command &cmd) { return cmd & 1; }
+inline bool reverse(const command &cmd) { return !(cmd & 1); }
 
 /*  Stepper motor wrapper for PIO state machine
     this class can be used as object,
