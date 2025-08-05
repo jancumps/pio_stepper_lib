@@ -60,7 +60,7 @@ void stepper_callback_controller::register_pio_interrupt(uint irq_channel, bool 
         break;
 #if (NUM_PIOS > 2) // pico 2       
     case 2:
-        handler = stepper_interrupt_manager::interrupt_handler_PIO2;
+        handler = interrupt_manager::interrupt_handler_PIO2;
         break;
 #endif            
     }
