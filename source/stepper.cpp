@@ -6,6 +6,12 @@ module;
 
 #include <array>
 
+// this is to work around RISC compiler bug solved in 14.2
+// https://gcc.gnu.org/pipermail/gcc-patches/2024-October/665109.html#:~:text=This%20patch%20leaves%20a%20couple,):%20...this.%20(
+// TODO once fixed, replace TRANSLATION_BUG_INLINE with inline
+#define TRANSLATION_BUG_INLINE
+
+
 export module stepper;
 export namespace stepper {
 
@@ -42,7 +48,7 @@ public:
 
     // API style methods, can be executed without creating an object
     // API style: write steps to TX FIFO. State machine will copy this into X
-    static inline void take_steps(PIO pio, uint sm, const command& cmd) {
+    static TRANSLATION_BUG_INLINE void take_steps(PIO pio, uint sm, const command& cmd) {
         pio_sm_put_blocking(pio, sm, cmd);
     }
     // API style: slow down motor
@@ -59,13 +65,13 @@ public:
     inline void set_delay(uint32_t delay) { set_delay(pio_, sm_, delay); }
 
     // state machine config
-    inline void pio_init(uint dir_pin, float clock_divider) {
+    TRANSLATION_BUG_INLINE void pio_init(uint dir_pin, float clock_divider) {
         stepper_program_init(pio_, sm_, pio_offset_[PIO_NUM(pio_)], dir_pin, clock_divider);
     }
     // enable or disable state machine
-    inline void enable(bool enable) { pio_sm_set_enabled(pio_, sm_, enable); }
+    TRANSLATION_BUG_INLINE void enable(bool enable) { pio_sm_set_enabled(pio_, sm_, enable); }
     // program the pio and store offset, to be called by user before a pio is used.
-    static inline void pio_program(PIO pio) {
+    static TRANSLATION_BUG_INLINE void pio_program(PIO pio) {
         pio_offset_[PIO_NUM(pio)] = pio_add_program(pio, &stepper_program);
     }
 protected:
