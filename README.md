@@ -82,7 +82,7 @@ int main() {
 ```
 
 ## Adding the lib to your Raspberry Pico project
-The repository has its own makefile. you add it by fetching from it in your CMakeFiles.txt. It is then available to your code as library stepper.
+The repository has its own makefile. you add it by fetching from it in your ```CMakeFiles.txt```. It is then available to your code as library stepper.
 ```
 # your CMakeFiles.txt
 # ... 
@@ -104,9 +104,15 @@ target_link_libraries(your_stepper_project
         hardware_gpio
         stepper
 )
-
 ```
 That is all it takes to integrate this design in your project.
+
+## Other project considerations  
+On a RP2350 (Pico2), the SDK default setting for ```PICO_MAX_SHARED_IRQ_HANDLERS``` limits the number of interrupt/callback enabled motors you can use. When you have more than 4 interrupt/callback enabled motors in your project, override the SDK setting in your ```CMakeFiles.txt``` with the number of motors in your code. Add it before Pico SDK import.
+```
+add_compile_definitions(PICO_MAX_SHARED_IRQ_HANDLERS=10)
+```
+
 
 ## demo project that uses this lib: 
 [Stepper Motor Control with Raspberry Pico PIO and DRV8711 driver](https://github.com/jancumps/pio_drv8711_stepper)  
