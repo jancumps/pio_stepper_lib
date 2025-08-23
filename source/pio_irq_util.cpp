@@ -28,12 +28,9 @@ export namespace pio_irq_util {
 // 10 (REL): the state machine ID (0…3) is added to the IRQ flag index, by way of
 // modulo-4 addition on the two LSBs
 inline uint relative_interrupt(const uint32_t ir, const uint sm) {
-    // TODO validate for Pico 2 interrupts 4 .. 7
     uint32_t retval = ir & 0x03; // last 2 bits
     retval += sm; // add relative value (is sm)
     retval = retval % 4; // mod 4
-    // TODO most likely I have to restore bits 31..2 here to work with Pico 2
-    // but I don't have one to test it
     retval |= ir & 0xfffffffc;
     return retval;
 }
@@ -45,7 +42,6 @@ inline pio_interrupt_source interrupt_source(const pio_interrupt_source is, cons
 
 // find for what state machine a relative interrupt was thrown
 uint sm_from_interrupt(const uint32_t irq_val, const uint32_t ir) {
-    // TODO validate for Pico 2 interrupts 4 .. 7
     uint i;
     for (i = 0; i < 4; i++) { // should be sm 0 .. 3
         if (irq_val & 1 << i) { // is bit set?
