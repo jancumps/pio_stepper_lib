@@ -88,43 +88,9 @@ protected:
     and / or it can report the number of commands executed
 */
 class stepper_callback_controller : public stepper_controller {
-using notifier_t = void (*)(const stepper_callback_controller&); // callback definition
-private:
-
-    /*
-    PIO interrupts can only call functions without parameters. They can't call object members.
-    This static embedded utility class helps matching interrupts to the relevant object.
-    */
-    class interrupt_manager {
-    private:
-        interrupt_manager() = delete;  // static class. prevent instantiating.
-    public:        
-        // if an object is currently handling a pio + sm combination, it will 
-        // be replaced and will no longer receive interrupts
-        // return false as warning if an existing combination is replaced
-        static bool register_stepper(stepper_callback_controller * stepper, bool set);
-
-        // PIO API doesn't accept a callback with parameters, so I can't pass the PIO instance
-        // provide a parameter-less method for ezach PIO is a reasonable solution
-        // only task is to call interrupt_handler() and passing it the PIO indicated in the name.
-        // Without overhead: optimised out inrelease code
-        static inline void interrupt_handler_PIO0() { interrupt_handler(pio0); }    
-        static inline void interrupt_handler_PIO1() { interrupt_handler(pio1); }
-#if (NUM_PIOS > 2) // pico 2       
-        static inline void interrupt_handler_PIO2() { interrupt_handler(pio2); }
-#endif        
-    private:
-        // forwards the interrupt to the surrounding class
-        static void interrupt_handler(PIO pio);
-        // utility calculates the index for the object staht serves a state machine in steppers_
-        static inline size_t index_for(PIO pio, uint sm) { return PIO_NUM(pio) * 4 + sm; }
-        // keep pointer of objects that serve the state machines
-        // 2-D array with slot for all possible state machines: PIO0[0..3], PIO1[0..3], ...
-        static std::array<stepper_callback_controller *, NUM_PIOS * 4> steppers_;
-    };   
 public:
     stepper_callback_controller(PIO pio, uint sm) : stepper_controller(pio,sm), commands_(0U),
-        callback_(nullptr) { interrupt_manager::register_stepper(this, true); }
+        callback_(nullptr) { pio_irq_manager_t::register_stepper(this, true); }
     virtual ~stepper_callback_controller() { interrupt_manager::register_stepper(this, false); }
 
     // return commands completed
