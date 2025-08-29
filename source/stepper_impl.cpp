@@ -11,24 +11,24 @@ module stepper;
 namespace stepper {
 
 
-// relative interrupt handler
-using pio_irq_manager_t = pio_irq::pio_irq<stepper_callback_controller, stepper_PIO_IRQ_DONE>;
-
-stepper_controller::stepper_callback_controller(PIO pio, uint sm) : 
-        stepper_controller(pio,sm), commands_(0U), callback_(nullptr) { 
-    pio_irq_manager_t::register_stepper(this, true); 
-}
-
-virtual stepper_controller::~stepper_callback_controller() { 
-    pio_irq_manager_t::register_stepper(this, false); 
-}
-
 void stepper_controller::set_delay(PIO pio, uint sm, uint32_t delay) {
     pio_sm_set_enabled(pio, sm, false);
     pio_sm_put(pio, sm, delay);
     pio_sm_exec(pio, sm, pio_encode_pull(false, false));
     pio_sm_exec(pio, sm, pio_encode_out(pio_isr, 32));
     pio_sm_set_enabled(pio, sm, true);
+}
+
+// relative interrupt handler
+using pio_irq_manager_t = pio_irq::pio_irq<stepper_callback_controller, stepper_PIO_IRQ_DONE>;
+
+stepper_callback_controller::stepper_callback_controller(PIO pio, uint sm) : 
+        stepper_controller(pio,sm), commands_(0U), callback_(nullptr) { 
+    pio_irq_manager_t::register_stepper(this, true); 
+}
+
+virtual stepper_callback_controller::~stepper_callback_controller() { 
+    pio_irq_manager_t::register_stepper(this, false); 
 }
 
 void stepper_callback_controller::register_pio_interrupt(uint irq_channel, bool enable) {
