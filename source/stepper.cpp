@@ -104,9 +104,13 @@ public:
     // user code class to call when a command is finished.
     // Pass immutable reference to object as user info
     inline void on_complete_callback(notifier_t callback) { callback_ = callback; }
-    inline void operator()() { handler(); }
+    inline void operator()() {
+        commands_ = commands_ + 1;
+        if (callback_ != nullptr) { (callback_)( *this); }
+    }
+}
+
 private:
-    void handler();
     volatile uint commands_; // volatile: updated by interrupt handler
     notifier_t callback_;
 };
