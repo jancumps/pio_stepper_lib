@@ -27,7 +27,7 @@ stepper_callback_controller::stepper_callback_controller(PIO pio, uint sm) :
     pio_irq_manager_t::register_handler(pio_, sm_, this, true); 
 }
 
-virtual stepper_callback_controller::~stepper_callback_controller() { 
+stepper_callback_controller::~stepper_callback_controller() { 
     pio_irq_manager_t::register_handler(pio_, sm_, this, false); 
 }
 
@@ -36,11 +36,7 @@ void stepper_callback_controller::register_pio_interrupt(uint irq_channel, bool 
 }
 
 void stepper_callback_controller::handler() {
-    uint irq = pio_->irq;
-    uint ir = pio_irq_util::relative_interrupt(stepper_PIO_IRQ_DONE, sm_);
-    assert(irq & 1 << sm_); // develop check: interrupt is from the correct state machine
     commands_ = commands_ + 1;
-    pio_interrupt_clear(pio_, ir);
     if (callback_ != nullptr) {
         (callback_)( *this);
     }
