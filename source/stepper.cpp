@@ -88,6 +88,7 @@ protected:
     and / or it can report the number of commands executed
 */
 class stepper_callback_controller : public stepper_controller {
+using notifier_t = void (*)(const stepper_callback_controller&); // callback definition
 public:
     stepper_callback_controller(PIO pio, uint sm) : stepper_controller(pio,sm), commands_(0U),
         callback_(nullptr) { pio_irq_manager_t::register_stepper(this, true); }
