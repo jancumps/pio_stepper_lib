@@ -4,11 +4,13 @@ module;
 
 #include <array>
 
-import pio_irq_util;
-
 module stepper;
 
 namespace stepper {
+
+
+// relative interrupt handler
+using pio_irq_manager_t = pio_irq::pio_irq<stepper_callback_controller, stepper_PIO_IRQ_DONE>;
 
 stepper_controller::stepper_callback_controller(PIO pio, uint sm) : 
         stepper_controller(pio,sm), commands_(0U), callback_(nullptr) { 

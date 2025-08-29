@@ -111,7 +111,4 @@ private:
     notifier_t callback_;
 };
 
-// relative interrupt handler
-using pio_irq_manager_t = pio_irq::pio_irq<stepper_callback_controller, stepper_PIO_IRQ_DONE>;
-
 } // namespace stepper
