@@ -91,7 +91,8 @@ protected:
 class stepper_callback_controller : public stepper_controller {
 using notifier_t = void (*)(const stepper_callback_controller&); // callback definition
 // relative interrupt handler
-using pio_irq_manager_t = pio_irq::pio_irq<stepper_callback_controller, stepper_PIO_IRQ_DONE>;public:
+using pio_irq_manager_t = pio_irq::pio_irq<stepper_callback_controller, stepper_PIO_IRQ_DONE>;
+public:
     stepper_callback_controller(PIO pio, uint sm);
     virtual ~stepper_callback_controller();
 
