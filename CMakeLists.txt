@@ -25,7 +25,7 @@ target_sources(stepper
 target_sources(stepper
         PUBLIC
         FILE_SET cxx_modules TYPE CXX_MODULES FILES
-#        ${CMAKE_CURRENT_SOURCE_DIR}/source/pio_irq_util.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/source/pio_irq_util.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/source/stepper.cpp
 )
 pico_generate_pio_header(stepper

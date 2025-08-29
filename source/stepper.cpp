@@ -6,6 +6,8 @@ module;
 
 #include <array>
 
+import pio_irq;
+
 // this is to work around RISC compiler bug solved in 14.2
 // https://gcc.gnu.org/pipermail/gcc-patches/2024-October/665109.html#:~:text=This%20patch%20leaves%20a%20couple,):%20...this.%20(
 // TODO once fixed, replace TRANSLATION_BUG_INLINE with inline
@@ -140,5 +142,9 @@ private:
     volatile uint commands_; // volatile: updated by interrupt handler
     notifier_t callback_;
 };
+
+// relative interrupt handler
+// the PIO interrupt manager
+using pio_irq_manager_t = pio_irq::pio_irq<stepper_callback_controller, stepper_PIO_IRQ_DONE>;
 
 } // namespace stepper
