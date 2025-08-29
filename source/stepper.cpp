@@ -89,6 +89,8 @@ protected:
 */
 class stepper_callback_controller : public stepper_controller {
 using notifier_t = void (*)(const stepper_callback_controller&); // callback definition
+// relative interrupt handler
+using pio_irq_manager_t = pio_irq::pio_irq<stepper_callback_controller, stepper_PIO_IRQ_DONE>;
 public:
     stepper_callback_controller(PIO pio, uint sm) : stepper_controller(pio,sm), commands_(0U),
         callback_(nullptr) { pio_irq_manager_t::register_stepper(this, true); }
@@ -111,8 +113,5 @@ private:
     notifier_t callback_;
 };
 
-// relative interrupt handler
-// the PIO interrupt manager
-using pio_irq_manager_t = pio_irq::pio_irq<stepper_callback_controller, stepper_PIO_IRQ_DONE>;
 
 } // namespace stepper
