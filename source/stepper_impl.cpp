@@ -4,6 +4,8 @@ module;
 
 #include <array>
 
+import pio_irq;
+
 module stepper;
 
 namespace stepper {
