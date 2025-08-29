@@ -90,6 +90,7 @@ protected:
 */
 class stepper_callback_controller : public stepper_controller {
 using notifier_t = void (*)(const stepper_callback_controller&); // callback definition
+
 public:
     stepper_callback_controller(PIO pio, uint sm);
     virtual ~stepper_callback_controller();
@@ -108,7 +109,6 @@ public:
         commands_ = commands_ + 1;
         if (callback_ != nullptr) { (callback_)( *this); }
     }
-}
 
 private:
     volatile uint commands_; // volatile: updated by interrupt handler
