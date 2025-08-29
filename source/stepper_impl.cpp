@@ -10,7 +10,8 @@ module stepper;
 
 namespace stepper {
 
-stepper_controller::stepper_callback_controller(PIO pio, uint sm) { 
+stepper_controller::stepper_callback_controller(PIO pio, uint sm) : 
+        stepper_controller(pio,sm), commands_(0U), callback_(nullptr) { 
     pio_irq_manager_t::register_stepper(this, true); 
 }
 
