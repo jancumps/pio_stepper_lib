@@ -10,6 +10,14 @@ module stepper;
 
 namespace stepper {
 
+stepper_controller::stepper_callback_controller(PIO pio, uint sm) { 
+    pio_irq_manager_t::register_stepper(this, true); 
+}
+
+virtual stepper_controller::~stepper_callback_controller() { 
+    pio_irq_manager_t::register_stepper(this, false); 
+}
+
 void stepper_controller::set_delay(PIO pio, uint sm, uint32_t delay) {
     pio_sm_set_enabled(pio, sm, false);
     pio_sm_put(pio, sm, delay);

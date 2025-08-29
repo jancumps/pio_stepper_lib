@@ -83,10 +83,6 @@ protected:
 };
 
 
-// relative interrupt handler
-using pio_irq_manager_t = pio_irq::pio_irq<stepper_callback_controller, stepper_PIO_IRQ_DONE>;
-
-
 /*  Stepper motor for PIO state machine, 
     with interrupt and notification support:
     It can notify the caller that a command is finished,
@@ -94,10 +90,11 @@ using pio_irq_manager_t = pio_irq::pio_irq<stepper_callback_controller, stepper_
 */
 class stepper_callback_controller : public stepper_controller {
 using notifier_t = void (*)(const stepper_callback_controller&); // callback definition
-public:
+// relative interrupt handler
+using pio_irq_manager_t = pio_irq::pio_irq<stepper_callback_controller, stepper_PIO_IRQ_DONE>;public:
     stepper_callback_controller(PIO pio, uint sm) : stepper_controller(pio,sm), commands_(0U),
-        callback_(nullptr) { pio_irq_manager_t::register_stepper(this, true); }
-    virtual ~stepper_callback_controller() { pio_irq_manager_t::register_stepper(this, false); }
+        callback_(nullptr);
+    virtual ~stepper_callback_controller();
 
     // return commands completed
     inline uint commands() const { return commands_; }
@@ -115,6 +112,5 @@ private:
     volatile uint commands_; // volatile: updated by interrupt handler
     notifier_t callback_;
 };
-
 
 } // namespace stepper
