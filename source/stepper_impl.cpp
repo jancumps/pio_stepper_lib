@@ -35,8 +35,4 @@ void stepper_callback_controller::register_pio_interrupt(uint irq_channel, bool 
     pio_irq_manager_t::register_interrupt(irq_channel, pio_, sm_, enable);
 }
 
-// initialise static class data
-// static pio program offset
-// uint stepper_controller::pio_offset_[NUM_PIOS];
-
 } // namespace stepper
