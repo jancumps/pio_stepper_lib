@@ -79,7 +79,7 @@ public:
 protected:
     PIO pio_;
     uint sm_;
-    static uint pio_offset_[NUM_PIOS] = {{0,0,0,0}};
+    static uint pio_offset_[NUM_PIOS];
 };
 
 
