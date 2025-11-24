@@ -79,7 +79,7 @@ public:
 protected:
     PIO pio_;
     uint sm_;
-    static uint pio_offset_[NUM_PIOS];
+    inline static uint pio_offset_[NUM_PIOS];
 };
 
 
