@@ -23,7 +23,7 @@ void stepper_controller::set_delay(PIO pio, uint sm, uint32_t delay) {
 using pio_irq_manager_t = pio_irq::pio_irq<stepper_callback_controller, stepper_PIO_IRQ_DONE>;
 
 stepper_callback_controller::stepper_callback_controller(PIO pio, uint sm) : 
-        stepper_controller(pio,sm) { 
+        stepper_controller(pio, sm) { 
     pio_irq_manager_t::register_handler(pio_, sm_, this, true); 
 }
 
