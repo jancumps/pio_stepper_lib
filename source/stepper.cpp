@@ -111,8 +111,8 @@ public:
     }
 
 private:
-    volatile uint commands_; // volatile: updated by interrupt handler
-    notifier_t callback_;
+    volatile uint commands_ = 0U; // volatile: updated by interrupt handler
+    notifier_t callback_ = nullptr;
 };
 
 } // namespace stepper
